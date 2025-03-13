@@ -45,7 +45,6 @@ async def send_text_with_image(text_message, image_path):
         try:
             # Send text message with image
             await channel.send(text_message, file=discord.File(image_path))
-
         except Exception as e:
             print(f"⚠️ Error sending image: {e}")
     else:
@@ -81,12 +80,12 @@ def schedule_tasks():
     # Mustard the Cat (Text + Image, No Embed)
     # Mustard Cat Wednesday
     schedule.every().wednesday.at("08:10").do(lambda: asyncio.create_task(
-         send_text_with_image("🐱 Good morning Umbra! It's Wednesday, Don't forget to put mustard the Cat!", "CatWed.jpg")
+         send_text_with_image("🐱 Good morning Umbra! It's Wednesday, Don't forget to put mustard on the Cat!", "images/CatWed.jpg")
     ))
 
     # Clean the damn Cat
     schedule.every().thursday.at("08:05").do(lambda: asyncio.create_task(
-        send_text_with_image("🐱 Good morning Umbra! Today is Thursday, Don't forget to clean the Cat!", "CatThursday.jpg")
+        send_text_with_image("🐱 Good morning Umbra! Today is Thursday, Don't forget to clean the Cat!", "images/CatThursday.jpg")
     ))
 
 # Background task to run the scheduler
@@ -95,10 +94,21 @@ async def scheduler():
         schedule.run_pending()
         await asyncio.sleep(60)  # Check every minute
 
+# Load Cogs
+async def load_cogs():
+    await bot.load_extension("cogs.admin")  # Load the admin cog
+
 # Combined on_ready() function
 @bot.event
 async def on_ready():
     print(f"✅ Logged in as {bot.user}")
+
+    try:
+        await load_cogs()  # Load the cogs correctly
+        synced = await bot.tree.sync()  # Sync slash commands
+        print(f"✅ Synced {len(synced)} slash commands.")
+    except Exception as e:
+        print(f"⚠️ Error syncing commands: {e}")
 
     # Send startup message
     channel = bot.get_channel(CHANNEL_ID)
