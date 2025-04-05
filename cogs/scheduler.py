@@ -2,9 +2,24 @@
 import discord
 import asyncio
 import schedule
+from datetime import datetime, timedelta, timezone
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+
+def next_gmt_timestamp(weekday: int, hour: int = 22, minute: int = 0) -> int:
+    """
+    Return a UNIX timestamp for the next given weekday at a specific GMT time.
+    Weekday: Monday = 0 ... Sunday = 6
+    """
+    now = datetime.now(timezone.utc)
+    days_ahead = (weekday - now.weekday() + 7) % 7
+    if days_ahead == 0 and now.hour >= hour:
+        days_ahead = 7
+
+    target_date = now + timedelta(days=days_ahead)
+    target_time = target_date.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    return int(target_time.timestamp())
 
 load_dotenv()
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
@@ -58,46 +73,49 @@ class Scheduler(commands.Cog):
         ))
 
         # SPACE Reminder
+        # Tuesday Morning (Send at 10am GMT / 6am EST)
         schedule.every().tuesday.at("06:00").do(lambda: asyncio.create_task(
-        self.send_space_message(
+            self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
             "Happy Chewsday Pilots!",
-            "As a reminder, space PvP starts at 10pm GMT (<t:1743957600:R> / <t:1743957600:F>). Prepare to group up and head to Deep Space!",
+            f"As a reminder, space PvP starts at 10pm GMT <t:{next_gmt_timestamp(1, 22)}:R>. Prepare to group up and head to Deep Space!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
         )))
 
+        # Tuesday Evening (Send 8pm GMT / 4pm EST)
         schedule.every().tuesday.at("16:00").do(lambda: asyncio.create_task(
-        self.send_space_message(
+            self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
-            "Chewsday Night Approaches!",
-            "Chewsday night Space PvP is about to start! Let's get ready to rumble and meet in Deep Space <t:1743957600:R>.",
+            "Chewsday Night PvP!",
+            f"We're about to launch! Group up and head to Deep Space <t:{next_gmt_timestamp(1, 22)}:R>!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
         )))
 
+        # Friday Morning (Send 10am EST / 2am GMT Sat)
         schedule.every().friday.at("10:00").do(lambda: asyncio.create_task(
-        self.send_space_message(
+            self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
-            "Friday Night Fights!",
-            "Good morning Pilots! Friday Night Fights is on. Calling all US Pilots to Deep Space <t:1746838800:R>. Group up and head to Deep Space!",
+            "Friday Night Fights Incoming!",
+            f"US pilots! PvP kicks off tonight <t:{next_gmt_timestamp(5, 2)}:R> — prepare for deployment!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
         )))
 
+        # Friday Evening (Send at 7pm EST / 11pm GMT)
         schedule.every().friday.at("19:00").do(lambda: asyncio.create_task(
-        self.send_space_message(
+            self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
             "Weapons Hot!",
-            "Time to stock up on missiles and chaff pilots as Friday Night Fights is kicking off <t:1746838800:R>. Go get 'em!",
+            f"Friday Night Fights are about to begin <t:{next_gmt_timestamp(5, 2)}:R> — rally in Deep Space!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
         )))
-
 
     async def scheduler(self):
         await self.bot.wait_until_ready()
