@@ -46,13 +46,13 @@ class Scheduler(commands.Cog):
                                         discord.Color.blue(), "🚀")
         ))
 
-        schedule.every().wednesday.at("08:10").do(lambda: asyncio.create_task(
-            self.send_text_with_image("🐱 Good morning Umbra! It's Wednesday, Don't forget to put mustard on the Cat!", "images/CatWed.jpg")
-        ))
+        # schedule.every().wednesday.at("08:10").do(lambda: asyncio.create_task(
+          #  self.send_text_with_image("🐱 Good morning Umbra! It's Wednesday, Don't forget to put mustard on the Cat!", "images/CatWed.jpg")
+        #))
 
-        schedule.every().thursday.at("08:05").do(lambda: asyncio.create_task(
-            self.send_text_with_image("🐱 Good morning Umbra! Today is Thursday, Don't forget to clean the Cat!", "images/CatThursday.jpg")
-        ))
+        #schedule.every().thursday.at("08:05").do(lambda: asyncio.create_task(
+         #   self.send_text_with_image("🐱 Good morning Umbra! Today is Thursday, Don't forget to clean the Cat!", "images/CatThursday.jpg")
+        #))
 
         schedule.every().friday.at("15:30").do(lambda: asyncio.create_task(
             self.send_scheduled_message("🎉 Reminder:", "Weekend Countdown",
@@ -78,18 +78,18 @@ class Scheduler(commands.Cog):
             self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
             "Happy Chewsday Pilots!",
-            f"As a reminder, space PvP starts at 10pm GMT <t:{next_gmt_timestamp(1, 22)}:R>. Prepare to group up and head to Deep Space!",
+            f"As a reminder, space PvP starts at 7PM UTC. Prepare to group up and head to Deep Space!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
         )))
 
-        # Tuesday Evening (Send 8pm GMT / 4pm EST)
-        schedule.every().tuesday.at("16:00").do(lambda: asyncio.create_task(
+        # Tuesday Evening (Send 7pm GMT / 3pm EST)
+        schedule.every().tuesday.at("15:00").do(lambda: asyncio.create_task(
             self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
             "Chewsday Night PvP!",
-            f"We're about to launch! Group up and head to Deep Space <t:{next_gmt_timestamp(1, 22)}:R>!",
+            f"We're about to launch! Group up and head to Deep Space!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
@@ -100,7 +100,7 @@ class Scheduler(commands.Cog):
             self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
             "Friday Night Fights Incoming!",
-            f"US pilots! PvP kicks off tonight <t:{next_gmt_timestamp(5, 2)}:R> — prepare for deployment!",
+            f"US pilots! PvP kicks off tonight at 7PM UTC — prepare for deployment!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
@@ -111,7 +111,7 @@ class Scheduler(commands.Cog):
             self.send_space_message(
             "***Incoming Transmission from Squadron HQ, Crimson Hollow***",
             "Weapons Hot!",
-            f"Friday Night Fights are about to begin <t:{next_gmt_timestamp(5, 2)}:R> — rally in Deep Space!",
+            f"Friday Night Fights are about to begin — rally in Deep Space!",
             discord.Color.dark_red(),
             "<:TieDefender:682583044783341570>",
             "images/abyssal_squadron_banner.jpg"
